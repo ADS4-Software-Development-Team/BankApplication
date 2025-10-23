@@ -3,9 +3,11 @@ package com.dekagoaytech.config;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
-import java.io.InputStream;
+import jakarta.annotation.PostConstruct;
+
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class FirebaseConfig {
@@ -15,9 +17,18 @@ public class FirebaseConfig {
     @PostConstruct
     public void init() {
         if (initialized) return;
+
         try {
-            InputStream serviceAccount =
-                    getClass().getClassLoader().getResourceAsStream("firebase-service-account.json");
+            // Read JSON credentials from environment variable
+            String firebaseCredentials = System.getenv("FIREBASE_CREDENTIALS_JSON");
+
+            if (firebaseCredentials == null || firebaseCredentials.isEmpty()) {
+                System.err.println("⚠️ Firebase credentials not found in environment variables!");
+                return;
+            }
+
+            ByteArrayInputStream serviceAccount =
+                    new ByteArrayInputStream(firebaseCredentials.getBytes(StandardCharsets.UTF_8));
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
@@ -26,7 +37,8 @@ public class FirebaseConfig {
 
             FirebaseApp.initializeApp(options);
             initialized = true;
-            System.out.println("✅ Firebase initialized successfully");
+
+            System.out.println("✅ Firebase initialized successfully from environment variable!");
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("❌ Failed to initialize Firebase", e);
