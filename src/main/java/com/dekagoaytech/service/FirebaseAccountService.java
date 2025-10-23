@@ -4,7 +4,6 @@ import com.dekagoaytech.model.DebitAccount;
 import com.google.api.core.ApiFuture;
 import com.google.firebase.database.*;
 import org.springframework.stereotype.Service;
-
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -12,8 +11,8 @@ public class FirebaseAccountService {
 
     private final DatabaseReference dbRef;
 
-    public FirebaseAccountService() throws Exception {
-        FirebaseInitializer.initialize();
+    public FirebaseAccountService() {
+        // ✅ Firebase is already initialized in FirebaseConfig
         this.dbRef = FirebaseDatabase.getInstance().getReference("accounts");
     }
 
@@ -22,7 +21,6 @@ public class FirebaseAccountService {
         CompletableFuture<Void> future = new CompletableFuture<>();
 
         try {
-            // If no accountId, generate one
             if (account.getAccountId() == null || account.getAccountId().isEmpty()) {
                 String generatedId = dbRef.push().getKey();
                 account.setAccountId(generatedId);
