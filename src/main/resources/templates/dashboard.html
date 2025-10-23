@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dekago Bank | Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Modal and layout styling */
+        .modal {
+          display: none;
+          position: fixed;
+          z-index: 1000;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0,0,0,0.5);
+          justify-content: center;
+          align-items: center;
+        }
+
+        .modal-content {
+          background-color: #fff;
+          padding: 25px;
+          border-radius: 10px;
+          width: 400px;
+          position: relative;
+          box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        }
+
+        .close-btn {
+          position: absolute;
+          top: 10px;
+          right: 15px;
+          font-size: 20px;
+          cursor: pointer;
+        }
+
+        .btn {
+          background-color: var(--primary, #1a4b8c);
+          color: white;
+          padding: 8px 16px;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+        }
+
+        .btn:hover {
+          background-color: var(--primary-light, #2a6bc5);
+        }
+
+        .dashboard-section {
+          padding: 20px;
+          max-width: 1000px;
+          margin: auto;
+        }
+
+        .accounts-grid {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
+        }
+
+        .account-card {
+          background: #fff;
+          border-radius: 12px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          padding: 20px;
+          flex: 1;
+          min-width: 250px;
+        }
+
+        .account-actions {
+          margin-top: 10px;
+          display: flex;
+          gap: 10px;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 15px;
+        }
+
+        th, td {
+          padding: 10px;
+          border-bottom: 1px solid #ddd;
+          text-align: left;
+        }
+
+        th {
+          background-color: #f5f5f5;
+        }
+
+        footer {
+          text-align: center;
+          padding: 20px;
+          background: #f5f5f5;
+          margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container header-container">
+        <div class="logo">
+            <i class="fas fa-university"></i>
+            <span>Dekago Bank</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/manageAccounts">Manage Accounts</a></li>
+                <li><a class="btn btn-outline" href="/">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="dashboard-section">
+    <div class="container">
+        <h1>Welcome, <span id="userName">User</span>!</h1>
+        <div class="balance-box">Current Balance: R<span id="currentBalance">0</span></div>
+
+        <!-- Account Overview -->
+        <section class="account-overview">
+            <h2>Your Account</h2>
+            <div class="accounts-grid">
+                <div class="account-card">
+                    <h3 id="accountName">Primary Account</h3>
+                    <p>Type: <span id="accountTypeText">Savings</span></p>
+                    <p>Balance: <strong>R<span id="accountBalance">0.00</span></strong></p>
+                    <div class="account-actions">
+                        <button id="depositBtn" class="btn"><i class="fas fa-arrow-down"></i> Deposit</button>
+                        <button id="withdrawBtn" class="btn"><i class="fas fa-arrow-up"></i> Withdraw</button>
+                        <button id="viewDetailsBtn" class="btn"><i class="fas fa-info-circle"></i> View Details</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deposit / Withdraw Modal -->
+        <div id="transactionModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" id="cancelBtn">&times;</span>
+                <h2 id="modalTitle">Transaction</h2>
+                <label>Account Type</label>
+                <input type="text" id="accountTypeField" readonly style="width:100%;padding:8px;margin-bottom:10px;"/>
+
+                <label>Amount (R)</label>
+                <input type="number" id="amountField" min="1" required style="width:100%;padding:8px;margin-bottom:10px;"/>
+
+                <div style="text-align:right;">
+                    <button id="confirmBtn" class="btn">Confirm</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🔐 PIN Authentication Modal -->
+        <div id="pinModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" id="closePinModal">&times;</span>
+                <h3>Confirm Withdrawal</h3>
+                <p>Please enter your PIN to confirm this transaction:</p>
+                <input type="password" id="pinField" placeholder="Enter your PIN" style="width:100%;padding:8px;border-radius:5px;border:1px solid #ccc;margin-bottom:10px;">
+                <div style="text-align:right;">
+                    <button id="pinConfirmBtn" class="btn">Confirm</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🧾 Account Details Modal -->
+        <div id="accountDetailsModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" id="closeDetailsModal">&times;</span>
+                <h3>Account Details</h3>
+                <p><strong>Account Name:</strong> <span id="detailsName">Main Account</span></p>
+                <p><strong>Account Type:</strong> <span id="detailsType">Savings</span></p>
+                <p><strong>Account Number:</strong> <span id="detailsNumber">---</span></p>
+                <p><strong>Current Balance:</strong> R<span id="detailsBalance">0.00</span></p>
+                <p><strong>Created At:</strong> <span id="detailsCreated">---</span></p>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <section class="recent-transactions">
+            <h2>Recent Transactions</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Account Type</th>
+                    <th>Type</th>
+                    <th>Amount</th>
+                    <th>Balance</th>
+                </tr>
+                </thead>
+                <tbody id="transactionTableBody"></tbody>
+            </table>
+        </section>
+    </div>
+</main>
+
+<footer>
+    <p>&copy; 2025 Dekago Bank. All rights reserved.</p>
+</footer>
+
+<!-- ✅ Firebase Script -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getDatabase, ref, get, child, update, push, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAljsKmPE-ydqESzPgXFBN2u5otm0WJCCQ",
+      authDomain: "java-app-8ebd6.firebaseapp.com",
+      databaseURL: "https://java-app-8ebd6-default-rtdb.firebaseio.com",
+      projectId: "java-app-8ebd6",
+      storageBucket: "java-app-8ebd6.appspot.com",
+      messagingSenderId: "590727411747",
+      appId: "1:590727411747:web:1b8c30fec1d71a00b85996"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    const userName = document.getElementById("userName");
+    const balanceDisplay = document.getElementById("currentBalance");
+    const accountBalance = document.getElementById("accountBalance");
+    const accountTypeText = document.getElementById("accountTypeText");
+    const depositBtn = document.getElementById("depositBtn");
+    const withdrawBtn = document.getElementById("withdrawBtn");
+    const modal = document.getElementById("transactionModal");
+    const modalTitle = document.getElementById("modalTitle");
+    const accountTypeField = document.getElementById("accountTypeField");
+    const amountField = document.getElementById("amountField");
+    const confirmBtn = document.getElementById("confirmBtn");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const transactionTableBody = document.getElementById("transactionTableBody");
+
+    const pinModal = document.getElementById("pinModal");
+    const closePinModal = document.getElementById("closePinModal");
+    const pinField = document.getElementById("pinField");
+    const pinConfirmBtn = document.getElementById("pinConfirmBtn");
+
+    const accountDetailsModal = document.getElementById("accountDetailsModal");
+    const closeDetailsModal = document.getElementById("closeDetailsModal");
+    const detailsName = document.getElementById("detailsName");
+    const detailsType = document.getElementById("detailsType");
+    const detailsNumber = document.getElementById("detailsNumber");
+    const detailsBalance = document.getElementById("detailsBalance");
+    const detailsCreated = document.getElementById("detailsCreated");
+
+    let currentUser, currentBalance = 0, accountType = "", accountNumber = "", createdAt = "", userEmail = "", pendingAmount = 0;
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUser = user;
+        userEmail = user.email;
+
+        const dbRef = ref(db);
+        const snapshot = await get(child(dbRef, `accounts/${user.uid}`));
+
+       if (snapshot.exists()) {
+          const data = snapshot.val();
+          userName.textContent = data.firstName;
+          accountType = data.accountType;
+          accountTypeText.textContent = accountType;
+          currentBalance = parseFloat(data.initialDeposit || 0);
+          balanceDisplay.textContent = currentBalance.toFixed(2);
+          accountBalance.textContent = currentBalance.toFixed(2);
+          accountNumber = data.idNumber || "N/A";
+          createdAt = data.createdAt || new Date().toLocaleString();
+          loadTransactions(user.uid);
+        }
+      } else {
+        window.location.href = "/login";
+      }
+    });
+
+    // Open modal
+    function openModal(type) {
+      modal.style.display = "flex";
+      modalTitle.textContent = type === "deposit" ? "Deposit Funds" : "Withdraw Funds";
+      accountTypeField.value = accountType;
+      confirmBtn.dataset.type = type;
+    }
+
+    // Close modals
+    cancelBtn.addEventListener("click", () => modal.style.display = "none");
+    closePinModal.addEventListener("click", () => pinModal.style.display = "none");
+
+    depositBtn.addEventListener("click", () => openModal("deposit"));
+    withdrawBtn.addEventListener("click", () => openModal("withdraw"));
+
+    // Confirm transaction (step 1)
+    confirmBtn.addEventListener("click", () => {
+      const amount = parseFloat(amountField.value);
+      if (!amount || amount <= 0) {
+        alert("Please enter a valid amount.");
+        return;
+      }
+
+      const transactionType = confirmBtn.dataset.type;
+      pendingAmount = amount;
+
+      if (transactionType === "deposit") {
+        processTransaction("deposit", amount);
+      } else if (transactionType === "withdraw") {
+        modal.style.display = "none";
+        pinModal.style.display = "flex";
+      }
+    });
+
+    // PIN confirmation modal (step 2 for withdraw)
+    pinConfirmBtn.addEventListener("click", async () => {
+      const pin = pinField.value;
+      if (!pin) {
+        alert("Please enter your PIN.");
+        return;
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, userEmail, pin);
+        pinModal.style.display = "none";
+        processTransaction("withdraw", pendingAmount);
+        pinField.value = "";
+      } catch (error) {
+        alert("❌ Invalid PIN. Please try again.");
+        console.error(error);
+      }
+    });
+
+    // Process Firebase transaction (shared)
+    async function processTransaction(type, amount) {
+      try {
+        let newBalance = currentBalance;
+
+        if (type === "deposit") {
+          newBalance += amount;
+        } else if (type === "withdraw") {
+          if (amount > currentBalance) {
+            alert("❌ Insufficient balance!");
+            return;
+          }
+          newBalance -= amount;
+        }
+
+        await update(ref(db, "accounts/" + currentUser.uid), {
+          initialDeposit: newBalance
+        });
+
+        const transaction = {
+          date: new Date().toISOString(),
+          accountType,
+          type,
+          amount,
+          balance: newBalance
+        };
+        await push(ref(db, "transactions/" + currentUser.uid), transaction);
+
+        alert(`✅ ${type === "deposit" ? "Deposit" : "Withdrawal"} successful!`);
+        currentBalance = newBalance;
+        balanceDisplay.textContent = newBalance.toFixed(2);
+        accountBalance.textContent = newBalance.toFixed(2);
+        amountField.value = "";
+      } catch (error) {
+        alert("❌ Transaction failed.");
+        console.error(error);
+      }
+    }
+
+    // Load transactions
+    function loadTransactions(userId) {
+      const transactionsRef = ref(db, "transactions/" + userId);
+      onValue(transactionsRef, (snapshot) => {
+        transactionTableBody.innerHTML = "";
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const transactions = Object.values(data).sort((a, b) => new Date(b.date) - new Date(a.date));
+          transactions.forEach((tx) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${new Date(tx.date).toLocaleString()}</td>
+              <td>${tx.accountType}</td>
+              <td>${tx.type.charAt(0).toUpperCase() + tx.type.slice(1)}</td>
+              <td>R${tx.amount}</td>
+              <td>R${tx.balance}</td>
+            `;
+            transactionTableBody.appendChild(row);
+          });
+        } else {
+          transactionTableBody.innerHTML = `
+            <tr><td colspan="5" style="text-align:center;">No transactions found.</td></tr>
+          `;
+        }
+      });
+    }
+
+    // 🟢 View Details Button
+    viewDetailsBtn.addEventListener("click", () => {
+      detailsName.textContent = "Main Account";
+      detailsType.textContent = accountType;
+      detailsNumber.textContent = accountNumber;
+      detailsBalance.textContent = currentBalance.toFixed(2);
+      detailsCreated.textContent = createdAt;
+      accountDetailsModal.style.display = "flex";
+    });
+
+    // Close modal
+    closeDetailsModal.addEventListener("click", () => {
+      accountDetailsModal.style.display = "none";
+    });
+    // Close modals when clicking outside
+    window.onclick = function(event) {
+      if (event.target === modal) modal.style.display = "none";
+      if (event.target === pinModal) pinModal.style.display = "none";
+	   if (e.target === accountDetailsModal) accountDetailsModal.style.display = "none";
+    };
+</script>
+
+
+</body>
+</html>

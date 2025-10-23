@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dekago Bank | Open an Account</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        .required-star { color: red; margin-left: 2px; }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container header-container">
+        <div class="logo">
+            <i class="fas fa-university"></i>
+            <span>Dekago Bank</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a class="btn btn-outline" href="/login">Login</a></li>
+                <li><a class="btn btn-primary" href="/">Home</a></li>
+
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="account-form-section">
+    <div class="container">
+        <h1>Open a New Account</h1>
+        <p>Fill out the form below to open your account with Dekago Bank.</p>
+
+        <form id="accountForm" method="POST">
+            <!-- Account Type -->
+            <div class="form-group">
+                <label for="accountType">Account Type<span class="required-star">*</span></label>
+                <select name="accountType" id="accountType" required>
+                    <option value="savings" selected>Savings Account</option>
+                    <option value="business">Business Account</option>
+                </select>
+            </div>
+
+            <!-- Name Fields -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name<span class="required-star">*</span></label>
+                    <input type="text" name="firstName" id="firstName" required />
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name<span class="required-star">*</span></label>
+                    <input type="text" name="lastName" id="lastName" required />
+                </div>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="form-group">
+                <label for="email">Email Address<span class="required-star">*</span></label>
+                <input type="email" name="email" id="email" required />
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number<span class="required-star">*</span></label>
+                <input type="tel" name="phone" id="phone" required />
+            </div>
+
+            <!-- DOB and ID -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="dob">Date of Birth<span class="required-star">*</span></label>
+                    <input type="date" name="dob" id="dob" required />
+                </div>
+                <div class="form-group">
+                    <label for="idNumber">ID Number<span class="required-star">*</span></label>
+                    <input type="text" name="idNumber" id="idNumber" placeholder="Enter your ID number" required />
+                </div>
+            </div>
+
+            <!-- Address -->
+            <div class="form-group">
+                <label for="address">Street Address<span class="required-star">*</span></label>
+                <input type="text" name="address" id="address" required />
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="city">City<span class="required-star">*</span></label>
+                    <input type="text" name="city" id="city" required />
+                </div>
+                <div class="form-group">
+                    <label for="zip">ZIP Code<span class="required-star">*</span></label>
+                    <input type="text" name="zip" id="zip" required />
+                </div>
+            </div>
+
+            <!-- Initial Deposit -->
+            <div class="form-group">
+                <label for="initialDeposit">Initial Deposit ($)<span class="required-star">*</span></label>
+                <input type="number" name="initialDeposit" id="initialDeposit" min="25" required />
+            </div>
+
+            <!-- ✅ Password Field -->
+            <div class="form-group">
+                <label for="password">Password<span class="required-star">*</span></label>
+                <input type="password" name="password" id="password" required />
+            </div>
+
+            <!-- Terms -->
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" required />
+                    I agree to the <a href="#">Terms and Conditions</a> and <a href="#">Privacy Policy</a><span class="required-star">*</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit Application</button>
+        </form>
+    </div>
+</main>
+
+<footer>
+    <div class="container footer-container">
+        <p>&copy; 2025 Dekago Bank. All rights reserved.</p>
+    </div>
+</footer>
+
+<!-- ✅ Corrected Firebase Registration Script -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    // ✅ Correct Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAljsKmPE-ydqESzPgXFBN2u5otm0WJCCQ",
+      authDomain: "java-app-8ebd6.firebaseapp.com",
+      databaseURL: "https://java-app-8ebd6-default-rtdb.firebaseio.com",
+      projectId: "java-app-8ebd6",
+      storageBucket: "java-app-8ebd6.appspot.com", // ✅ fixed
+      messagingSenderId: "590727411747",
+      appId: "1:590727411747:web:1b8c30fec1d71a00b85996"
+    };
+
+    // ✅ Initialize Firebase app
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    const accountForm = document.getElementById("accountForm");
+
+    accountForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = accountForm.email.value.trim();
+      const password = accountForm.password.value.trim();
+
+      try {
+        // Create Auth user
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+            // ✅ Generate 10-digit account number
+            const accountNumber = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+
+        // Store user data in Realtime DB
+        const formData = {
+          firstName: accountForm.firstName.value,
+          lastName: accountForm.lastName.value,
+          email,
+          phone: accountForm.phone.value,
+          dob: accountForm.dob.value,
+          idNumber: accountForm.idNumber.value,
+          address: accountForm.address.value,
+          city: accountForm.city.value,
+          zip: accountForm.zip.value,
+          initialDeposit: accountForm.initialDeposit.value,
+          accountType: accountForm.accountType.value,
+          timestamp: new Date().toISOString(),
+        };
+
+        await set(ref(db, "accounts/" + user.uid), formData);
+
+        alert("✅ Account created successfully! Redirecting to login page...");
+        window.location.href = "/login";
+
+      } catch (error) {
+        console.error(error);
+        alert("❌ Firebase Error: " + error.message);
+      }
+    });
+</script>
+
+</body>
+</html>

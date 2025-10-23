@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dekago Bank | Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<header>
+    <div class="container header-container">
+        <div class="logo">
+            <i class="fas fa-university"></i>
+            <span>Dekago Bank</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/openAccount">Open Account</a></li>
+                <li><a href="/login" class="active">Login</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<main class="account-form-section">
+    <div class="container">
+        <h1>Welcome Back</h1>
+        <p>Login to your Dekago Bank account below.</p>
+
+        <!-- Update form action to redirect to dashboard -->
+        <form id="loginForm" action="/dashboard" method="GET">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" name="email" id="email" placeholder="Enter your email" value="defence" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" placeholder="•••••" required>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="remember"> Remember Me
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Login</button>
+
+            <div style="text-align:center; margin-top: 20px;">
+                <p>Don't have an account? <a href="/openAccount">Open an Account</a></p>
+                <p><a href="#">Forgot Password?</a></p>
+            </div>
+        </form>
+    </div>
+</main>
+
+<footer>
+    <div class="container footer-container">
+        <p>&copy; 2025 Dekago Bank. All rights reserved.</p>
+    </div>
+</footer>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAljsKmPE-ydqESzPgXFBN2u5otm0WJCCQ",
+      authDomain: "java-app-8ebd6.firebaseapp.com",
+      projectId: "java-app-8ebd6",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const loginForm = document.getElementById("loginForm");
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      try {
+        // ✅ Check credentials
+        await signInWithEmailAndPassword(auth, email, password);
+        alert("✅ Login successful!");
+        window.location.href = "/dashboard"; // redirect after success
+      } catch (error) {
+        alert("❌ Invalid email or password: " + error.message);
+      }
+    });
+</script>
+</body>
+</html>
