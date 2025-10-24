@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absa Business Banking</title>
+    <style>
+        /* General Reset & Fonts */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        :root {
+            --primary: #1a4b8c;
+            --primary-light: #2a6bc5;
+            --secondary: #4CAF50;
+            --secondary-light: #8BC34A;
+            --light: #f5f7fa;
+            --dark: #2c3e50;
+            --text: #333;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --gradient: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+        body { background: var(--light); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+
+        /* Header */
+        header { background: white; box-shadow: var(--shadow); position: sticky; top:0; z-index: 1000; }
+        .header-container { display: flex; justify-content: space-between; align-items: center; padding: 15px 5%; flex-wrap: wrap; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--primary); }
+        nav ul { display: flex; list-style: none; gap: 20px; flex-wrap: wrap; }
+        nav a { text-decoration: none; color: var(--dark); font-weight: 500; position: relative; }
+        nav a:hover { color: var(--primary); }
+        nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -3px; left:0; background-color: var(--secondary); transition: width 0.3s; }
+        nav a:hover::after { width: 100%; }
+
+        /* Hero Section */
+        .hero { background: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1900&q=80') no-repeat center center/cover; color: white; padding: 100px 5%; text-align: left; position: relative; }
+        .hero::before { content: ''; position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.55); z-index:0; }
+        .hero-content { position: relative; z-index:1; max-width: 700px; }
+        .hero h1 { font-size: 3rem; margin-bottom: 20px; }
+        .hero p { font-size: 1.2rem; margin-bottom: 30px; opacity: 0.9; }
+        .btn { padding: 12px 25px; border-radius: 5px; font-weight: 600; cursor: pointer; border: none; background: var(--gradient); color: white; transition: transform 0.3s, box-shadow 0.3s; text-decoration:none; display:inline-block; }
+        .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+        /* Banner Sections */
+        .banner { display: flex; flex-wrap: wrap; gap: 30px; margin: 60px 5%; }
+        .banner-card { flex: 1; min-width: 280px; background: white; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s; }
+        .banner-card:hover { transform: translateY(-5px); }
+        .banner-card img { width: 100%; height: 180px; object-fit: cover; }
+        .banner-card-content { padding: 20px; }
+        .banner-card-content h3 { font-size: 1.2rem; color: var(--primary); margin-bottom: 10px; }
+        .banner-card-content p { color: #666; font-size: 0.95rem; margin-bottom: 15px; }
+        .banner-card-content a { text-decoration: none; color: var(--secondary); font-weight: 600; }
+
+        /* Section Titles */
+        .section-title { text-align: center; margin: 60px 0 40px; }
+        .section-title h2 { font-size: 2.5rem; color: var(--dark); margin-bottom: 15px; }
+        .section-title p { max-width: 600px; margin: 0 auto; color: #666; }
+
+        /* Services Grid */
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin: 0 5% 60px; }
+        .service-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); transition: transform 0.3s; }
+        .service-card:hover { transform: translateY(-5px); }
+        .service-card img { width: 100%; height: 160px; object-fit: cover; }
+        .service-card-content { padding: 20px; }
+        .service-card-content h3 { color: var(--primary); margin-bottom: 10px; }
+        .service-card-content p { color: #666; margin-bottom: 15px; }
+        .service-card-content a { text-decoration: none; color: var(--secondary); font-weight: 600; }
+
+        /* Footer */
+        footer { background: var(--dark); color: white; padding: 60px 5% 20px; }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 40px; }
+        .footer-column h3 { color: var(--secondary-light); margin-bottom: 15px; }
+        .footer-column ul { list-style: none; }
+        .footer-column ul li { margin-bottom: 10px; }
+        .footer-column a { color: #bbb; text-decoration: none; transition: color 0.3s; }
+        .footer-column a:hover { color: white; }
+        .social-links { display: flex; gap: 15px; margin-top: 20px; }
+        .social-links a { display: flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:50%; background: rgba(255,255,255,0.1); transition: background 0.3s; color:white; text-decoration:none; }
+        .social-links a:hover { background: var(--secondary); }
+        .copyright { text-align: center; color: #bbb; font-size:0.9rem; margin-top:20px; }
+
+        @media (max-width:768px){
+            .hero h1{ font-size:2rem; }
+            .banner{ flex-direction: column; margin:40px 5%; }
+            .services-grid{ grid-template-columns: 1fr; margin:0 5% 40px; }
+            nav ul{ justify-content:center; gap:15px; }
+            .header-container{ flex-direction:column; gap:10px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <div class="header-container">
+        <div class="logo">Absa</div>
+        <nav>
+            <ul>
+                <li><a href="#">Personal</a></li>
+                <li><a href="#">Private & Wealth</a></li>
+                <li><a href="#">Business</a></li>
+                <li><a href="#">Corporate</a></li>
+                <li><a href="#">Accounts</a></li>
+                <li><a href="#">Credit cards</a></li>
+                <li><a href="#">Payments</a></li>
+                <li><a href="#">Loans</a></li>
+                <li><a href="#">Invest</a></li>
+                <li><a href="#">Insure</a></li>
+                <li><a href="#">International</a></li>
+            </ul>
+        </nav>
+        <a href="#" class="btn">Log in</a>
+    </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>Business Banking solutions to grow your business</h1>
+        <p>Every great business starts with a story – we’re here to help you build yours, one smart business banking solution at a time.</p>
+        <a href="#" class="btn">Continue Application</a>
+    </div>
+</section>
+
+<!-- Banners -->
+<div class="banner">
+    <div class="banner-card">
+        <img src="https://images.unsplash.com/photo-1581091012184-9dc4e0e3b3c0?auto=format&fit=crop&w=600&q=80" alt="Laptop for business">
+        <div class="banner-card-content">
+            <h3>Win a laptop for your business!</h3>
+            <a href="#">Tell me more</a>
+        </div>
+    </div>
+
+    <div class="banner-card">
+        <img src="https://images.unsplash.com/photo-1605902711622-cfb43c443f92?auto=format&fit=crop&w=600&q=80" alt="Merchant Services">
+        <div class="banner-card-content">
+            <h3>Merchant Services</h3>
+            <p>Launch. Sell. Grow. One platform that does it all.</p>
+            <a href="#">Tell me more</a>
+        </div>
+    </div>
+
+    <div class="banner-card">
+        <img src="https://images.unsplash.com/photo-1590608897129-79a2f0bbf8f2?auto=format&fit=crop&w=600&q=80" alt="Islamic Depositor Plus">
+        <div class="banner-card-content">
+            <h3>Islamic Depositor Plus</h3>
+            <p>Grow Your Business with Islamic Depositor Plus.</p>
+            <a href="#">Tell me more</a>
+        </div>
+    </div>
+</div>
+
+<!-- Services Grid -->
+<div class="services-grid">
+    <div class="service-card">
+        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=600&q=80" alt="Business Accounts">
+        <div class="service-card-content">
+            <h3>Business Accounts</h3>
+            <p>Add value to your banking with our Business Evolve accounts.</p>
+            <a href="#">See more</a>
+        </div>
+    </div>
+
+    <div class="service-card">
+        <img src="https://images.unsplash.com/photo-1556740729-26f4f0b0b4b5?auto=format&fit=crop&w=600&q=80" alt="Credit Cards">
+        <div class="service-card-content">
+            <h3>Credit Cards</h3>
+            <p>Power your business with a credit card that boosts your cashflow.</p>
+            <a href="#">See more</a>
+        </div>
+    </div>
+
+    <div class="service-card">
+        <img src="https://images.unsplash.com/photo-1567427018141-0584cfcbf1f6?auto=format&fit=crop&w=600&q=80" alt="Finance">
+        <div class="service-card-content">
+            <h3>Finance</h3>
+            <p>Simple, flexible business loans to support your next move.</p>
+            <a href="#">See more</a>
+        </div>
+    </div>
+
+    <div class="service-card">
+        <img src="https://images.unsplash.com/photo-1573164574391-5395d4c4e3bb?auto=format&fit=crop&w=600&q=80" alt="Payment Solutions">
+        <div class="service-card-content">
+            <h3>Payment Solutions</h3>
+            <p>Accept payments anywhere, 24/7, from in-store to online.</p>
+            <a href="#">See more</a>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-column">
+            <h3>About Absa</h3>
+            <ul>
+                <li><a href="#">Who we are</a></li>
+                <li><a href="#">Investor Relations</a></li>
+                <li><a href="#">Careers</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h3>Services</h3>
+            <ul>
+                <li><a href="#">Digital Banking</a></li>
+                <li><a href="#">Find a branch</a></li>
+                <li><a href="#">Safety & Security</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h3>Social</h3>
+            <div class="social-links">
+                <a href="#">F</a>
+                <a href="#">T</a>
+                <a href="#">L</a>
+            </div>
+        </div>
+    </div>
+    <div class="copyright">
+        &copy; 2025 Absa Bank Limited. All rights reserved.
+    </div>
+</footer>
+
+</body>
+</html>
+ 
