@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit | Dekago Bank</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===================== VARIABLES ===================== */
+        :root {
+            --primary: #1a4b8c;
+            --primary-light: #2a6bc5;
+            --secondary: #4CAF50;
+            --secondary-light: #8BC34A;
+            --accent: #FF9800;
+            --light: #f5f7fa;
+            --dark: #2c3e50;
+            --text: #333333;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --gradient: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            color: var(--text);
+            line-height: 1.6;
+            background-color: var(--light);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* ===================== HEADER ===================== */
+        header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+            color: var(--secondary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            position: relative;
+            font-weight: 500;
+            color: var(--dark);
+            transition: color 0.3s;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--secondary);
+            transition: width 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* ===================== BUTTONS ===================== */
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-light {
+            background: white;
+            color: var(--primary);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* ===================== HERO ===================== */
+        .hero {
+            background: var(--gradient);
+            color: white;
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .hero-text {
+            flex: 1;
+            z-index: 2;
+        }
+
+        .hero-text h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        .hero-image .placeholder-image {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            background: rgba(0,0,0,0.1);
+            width: 250px;
+            height: 250px;
+            border-radius: 10px;
+        }
+
+        /* ===================== FEATURES ===================== */
+        .features {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            text-align: center;
+            border-top: 4px solid var(--secondary);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        /* ===================== CALCULATOR ===================== */
+        .calculator-section {
+            padding: 60px 0;
+            background: var(--light);
+        }
+
+        .calculator-container {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .calculator-text {
+            flex: 1;
+        }
+
+        .calculator-form {
+            flex: 1;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(26, 75, 140, 0.2);
+        }
+
+        .calculation-result {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .monthly-payment {
+            background: var(--secondary-light);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 1.5rem;
+        }
+
+        .calculator-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* ===================== FOOTER ===================== */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            color: var(--secondary-light);
+        }
+
+        .footer-column a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+
+        /* ===================== RESPONSIVE ===================== */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            nav ul {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            .calculator-container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- HEADER -->
+<header>
+    <div class="container header-container">
+        <div class="logo">
+            <i class="fas fa-university"></i>
+            <span>Dekago Bank</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/transact">Transact</a></li>
+                <li><a href="/save">Save</a></li>
+                <li><a href="/insure">Insure</a></li>
+                <li><a href="/credit">Credit</a></li>
+            </ul>
+        </nav>
+        <div class="auth-buttons">
+            <a href="/login" class="btn btn-outline">Login</a>
+            <a href="/openAccount" class="btn btn-primary">Open Account</a>
+        </div>
+    </div>
+</header>
+
+<!-- HERO SECTION -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Credit solutions for your needs</h1>
+                <p>Choose from personalised credit solutions that suit your needs. Whether you need a loan now or revolving credit for later, a Credit Card for day-to-day transactions or a Home Loan – we've got it all.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-light">Apply Now</button>
+                    <button class="btn btn-outline">Learn More</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="placeholder-image">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <p>Credit Landing Hero_2023-Desktop-V2</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CREDIT PRODUCTS -->
+<section class="features">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our Credit Products</h2>
+            <p>Flexible credit solutions designed for your financial needs</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                <h3>Access Facility</h3>
+                <p>Get access to revolving credit of up to R500 000.</p>
+                <button class="btn btn-primary">Get an access facility</button>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-hand-holding-usd"></i>
+                </div>
+                <h3>Personal Loan</h3>
+                <p>Apply on our app or online, no branch visit needed.</p>
+                <button class="btn btn-primary">Get a personal loan</button>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <h3>Credit Card</h3>
+                <p>Apply online, get free delivery and cash back on your spend.</p>
+                <button class="btn btn-primary">Get a Dekago credit card</button>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <h3>Vehicle Loan</h3>
+                <p>Finance your car easily with our flexible vehicle loan options.</p>
+                <button class="btn btn-primary">Apply for a vehicle loan</button>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3>Education Loan</h3>
+                <p>Cover tuition fees and education expenses with convenient repayment plans.</p>
+                <button class="btn btn-primary">Apply for an education loan</button>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <h3>Home Loan</h3>
+                <p>Apply for a Home Loan online or on our app in 4 easy steps.</p>
+                <button class="btn btn-primary">Get a Dekago home loan</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CALCULATOR SECTION -->
+<section class="calculator-section">
+    <div class="container">
+        <div class="calculator-container">
+            <div class="calculator-text">
+                <h2>Credit calculator</h2>
+                <p>Wondering what it's going to cost? Just check on our calculator — it's that simple!</p>
+            </div>
+            <div class="calculator-form">
+                <div class="form-group">
+                    <label for="loanAmount">Loan Amount</label>
+                    <input type="range" id="loanAmount" min="1000" max="500000" value="50000" class="form-control">
+                    <div class="amount-display">R <span id="amountValue">50,000</span></div>
+                </div>
+                <div class="form-group">
+                    <label for="loanTerm">Loan Term (months)</label>
+                    <input type="range" id="loanTerm" min="7" max="84" value="24" class="form-control">
+                    <div class="term-display"><span id="termValue">24</span> months</div>
+                </div>
+                <div class="form-group">
+                    <label for="interestRate">Interest Rate</label>
+                    <input type="text" id="interestRate" value="12.5%" class="form-control" readonly>
+                </div>
+                <div class="calculation-result">
+                    <h3>Your monthly instalment</h3>
+                    <div class="monthly-payment" id="monthlyPayment">R 2,450.00</div>
+                </div>
+                <div class="calculator-buttons">
+                    <button class="btn btn-outline" id="clearCalculator">Clear</button>
+                    <button class="btn btn-primary">Apply now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Dekago Bank</h3>
+                <ul>
+                    <li><a href="#">Contact us</a></li>
+                    <li><a href="#">Find a branch</a></li>
+                    <li><a href="#">Lost or stolen card</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Personal</h3>
+                <ul>
+                    <li><a href="#">Transact</a></li>
+                    <li><a href="#">Save</a></li>
+                    <li><a href="#">Insure</a></li>
+                    <li><a href="#">Credit</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Business</h3>
+                <ul>
+                    <li><a href="#">Transact</a></li>
+                    <li><a href="#">Save</a></li>
+                    <li><a href="#">Insure</a></li>
+                    <li><a href="#">Credit</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="#">About us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Investor relations</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>Dekago Bank is an authorised financial services provider (FSP 46669) and registered credit provider (NCRCP13). Dekago Bank Limited Reg. No: 1980/003695/06</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    const loanAmount = document.getElementById('loanAmount');
+    const amountValue = document.getElementById('amountValue');
+    const loanTerm = document.getElementById('loanTerm');
+    const termValue = document.getElementById('termValue');
+    const monthlyPayment = document.getElementById('monthlyPayment');
+
+    const interestRate = 12.5 / 100;
+
+    function calculatePayment() {
+        const P = Number(loanAmount.value);
+        const n = Number(loanTerm.value);
+        const r = interestRate / 12;
+        const payment = (P * r) / (1 - Math.pow(1 + r, -n));
+        monthlyPayment.textContent = 'R ' + payment.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    loanAmount.addEventListener('input', () => {
+        amountValue.textContent = Number(loanAmount.value).toLocaleString();
+        calculatePayment();
+    });
+
+    loanTerm.addEventListener('input', () => {
+        termValue.textContent = loanTerm.value;
+        calculatePayment();
+    });
+
+    document.getElementById('clearCalculator').addEventListener('click', () => {
+        loanAmount.value = 50000;
+        loanTerm.value = 24;
+        amountValue.textContent = "50,000";
+        termValue.textContent = "24";
+        calculatePayment();
+    });
+
+    calculatePayment();
+</script>
+</body>
+</html>
