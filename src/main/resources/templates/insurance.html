@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Insurance Services</title>
+    <style>
+        /* ===================== GLOBAL ===================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #1a4b8c;
+            --primary-light: #2a6bc5;
+            --secondary: #4CAF50;
+            --secondary-light: #8BC34A;
+            --accent: #FF9800;
+            --light: #f5f7fa;
+            --dark: #2c3e50;
+            --text: #333333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --gradient: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+
+        body {
+            color: var(--text);
+            line-height: 1.6;
+            background-color: var(--light);
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* ===================== HEADER ===================== */
+        header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            flex: 1;
+        }
+
+        nav {
+            flex: 2;
+            display: flex;
+            justify-content: center;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--secondary);
+            transition: width 0.3s;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .home-link {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .home-link a {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .home-link a:hover {
+            color: var(--secondary);
+        }
+
+        /* ===================== HERO ===================== */
+        .hero {
+            position: relative;
+            background: url("https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1900&q=80")
+            no-repeat center center/cover;
+            color: white;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.45);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn-light {
+            background: white;
+            color: var(--primary);
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .btn-light:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        /* ===================== SERVICES / CARDS ===================== */
+        .services {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            text-align: center;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .service-content {
+            padding: 25px;
+        }
+
+        .service-content h3 {
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .service-content p {
+            margin-bottom: 15px;
+            color: #666;
+        }
+
+        .service-content .btn {
+            width: auto;
+            display: inline-block;
+        }
+
+        /* ===================== BANNER ===================== */
+        .banner {
+            background: var(--gradient);
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+            margin-top: 60px;
+            border-radius: 10px;
+        }
+
+        .banner h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .banner p {
+            max-width: 800px;
+            margin: auto;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* ===================== FOOTER ===================== */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 20px;
+            text-align: center;
+        }
+
+        /* ===================== RESPONSIVE ===================== */
+        @media (max-width: 900px) {
+            .header-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .home-link {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container header-container">
+        <div class="logo">Dekago Insurance</div>
+
+        <nav>
+            <ul>
+                <li><a href="/transact">Transact</a></li>
+                <li><a href="/business">Business</a></li>
+                <li><a href="/insurance">Insurence</a></li>
+                <li><a href="/credit">Credit</a></li>
+            </ul>
+        </nav>
+
+        <div class="home-link">
+            <a href="/" class="active">Home</a>
+        </div>
+    </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1>Manage all your insurance needs here!</h1>
+        <p>Compare a wide range of options, find the most cost-effective plans, and enjoy 24/7 support—right here.</p>
+        <div class="hero-buttons">
+            <a href="#" class="btn-light">Get Started</a>
+        </div>
+    </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services container">
+    <h2 class="section-title"><span>Find the best insurance for all your needs</span></h2>
+    <div class="services-grid">
+        <div class="service-card">
+            <img src="https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1600&q=80" alt="Car Insurance" />
+            <div class="service-content">
+                <h3>Car Insurance</h3>
+                <p>Get comprehensive protection against theft, damage, and accidents for your car.</p>
+                <a href="#" class="btn btn-secondary">Tell me more</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <img src="https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=1600&q=80" alt="Home Insurance" />
+            <div class="service-content">
+                <h3>Home Insurance</h3>
+                <p>Protect your home and valuables from unexpected damage and disasters.</p>
+                <a href="#" class="btn btn-secondary">Tell me more</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1600&q=80" alt="Life Insurance" />
+            <div class="service-content">
+                <h3>Life Insurance</h3>
+                <p>Secure your family’s financial future with our flexible life cover options.</p>
+                <a href="#" class="btn btn-secondary">Get cover</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <img src="https://images.pexels.com/photos/5452201/pexels-photo-5452201.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Health Cover" />
+            <div class="service-content">
+                <h3>Health Cover</h3>
+                <p>Protect your family's health with reliable coverage and peace of mind for medical needs.</p>
+                <a href="#" class="btn btn-secondary">Get a Quote</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <img src="https://images.pexels.com/photos/3184614/pexels-photo-3184614.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Funeral Cover" />
+            <div class="service-content">
+                <h3>Funeral Cover</h3>
+                <p>Ease the burden on your family with affordable funeral plans and support services.</p>
+                <a href="#" class="btn btn-secondary">Get a Quote</a>
+            </div>
+        </div>
+
+        <div class="service-card">
+            <img src="https://images.pexels.com/photos/2976426/pexels-photo-2976426.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Travel Insurance" />
+            <div class="service-content">
+                <h3>Travel Insurance</h3>
+                <p>Travel with confidence knowing you’re covered for medical emergencies and lost luggage.</p>
+                <a href="#" class="btn btn-secondary">Get a Quote</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BANNER -->
+<div class="banner">
+    <h2>Manage your policy easily, anytime, anywhere</h2>
+    <p>With the Dekago Self-Service Portal, you can handle your insurance the way you want — anytime, on any device.</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <p>© 2025 Dekago Insurance. All rights reserved. | Terms & Conditions | Privacy Policy</p>
+</footer>
+</body>
+</html>
