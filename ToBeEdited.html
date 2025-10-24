@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Accounts | Bank Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="container header-container">
+        <div class="logo">
+            <i class="fas fa-university"></i>
+            <span>Dekago Bank</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a onclick="openModal('createModal')">Create Internal Account</a></li>
+            </ul>
+        </nav>
+        <div class="auth-buttons">
+            <button class="btn btn-outline" onclick="window.location.href='/'">Logout</button>
+        </div>
+    </div>
+</header>
+
+<!-- MAIN SECTION -->
+<section class="container" style="padding: 60px 0; width: 90%; margin: auto;">
+    <h1 style="color: #004080; text-align: center; margin-bottom: 40px;">My Accounts</h1>
+
+    <!-- Accounts Grid -->
+    <div id="accountsGrid" class="features-grid"></div>
+
+    <!-- Recent Transactions -->
+    <div class="section-title" style="margin-top: 80px;">
+        <h2>Recent Transactions</h2>
+        <p>Track your latest account activity.</p>
+    </div>
+
+    <div id="transactionsList" style="max-width:700px; margin:0 auto; text-align:center; color:gray;">
+        <p>No transactions yet.</p>
+    </div>
+</section>
+
+<!-- TRANSFER FUNDS MODAL -->
+<div id="transferModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Transfer Funds</h2>
+            <button class="close-modal" onclick="closeModal('transferModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="transferForm">
+                <div class="form-group">
+                    <label>From Account</label>
+                    <p id="fromAccountDisplay" class="form-control" style="background:#f0f0f0; cursor:not-allowed;"></p>
+                    <input type="hidden" id="fromAccount" />
+                </div>
+
+                <div class="form-group">
+                    <label>To Account</label>
+                    <select id="toAccount" class="form-control"></select>
+                </div>
+
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" id="transferAmount" placeholder="Enter amount" class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Transfer</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- CREATE ACCOUNT MODAL -->
+<div id="createModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Create New Account</h2>
+            <button class="close-modal" onclick="closeModal('createModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="createAccountForm">
+                <div class="form-group">
+                    <label>Select Account Type</label>
+                    <select id="accountType" class="form-control">
+                        <option>💰 Savings Account - Earn interest</option>
+                        <option>🏢 Business Account - Manage your business</option>
+                        <option>💳 Credit Account - Access credit</option>
+                        <option>🏦 Fixed Deposit - Secure your money</option>
+                        <option>🌍 Forex Account - Trade currencies</option>
+                        <option>👨‍👩‍👧‍👦 Family Account - Manage family funds</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Initial Deposit</label>
+                    <input type="number" id="initialDeposit" placeholder="Enter amount (can be 0)" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-secondary">Create Account</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="copyright">© 2025 Bank Portal | All rights reserved.</div>
+</footer>
+
+<script src="https://kit.fontawesome.com/a2e0d6b8aa.js" crossorigin="anonymous"></script>
+
+<!-- 🔥 Firebase Integration -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getDatabase, ref, get, set, push, update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+    import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAljsKmPE-ydqESzPgXFBN2u5otm0WJCCQ",
+        authDomain: "java-app-8ebd6.firebaseapp.com",
+        databaseURL: "https://java-app-8ebd6-default-rtdb.firebaseio.com",
+        projectId: "java-app-8ebd6",
+        storageBucket: "java-app-8ebd6.appspot.com",
+        messagingSenderId: "839009704629",
+        appId: "1:839009704629:web:3a6c95efc17f7fca984f2e"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+    let currentUserId = null;
+
+    // ✅ Create default account on registration
+    async function registerUser(fullName, email, password) {
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            await set(ref(db, "users/" + user.uid), {
+                name: fullName,
+                email: email,
+                createdAt: new Date().toLocaleString()
+            });
+
+            await set(ref(db, "accounts/" + user.uid + "/main"), {
+                type: "Main Account",
+                balance: 0,
+                accountNumber: Math.floor(100000 + Math.random() * 900000)
+            });
+
+            alert("Registration successful! Main Account created.");
+            window.location.href = "/dashboard";
+        } catch (error) {
+            alert("Error: " + error.message);
+        }
+    }
+
+    // ✅ Auth check
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            currentUserId = user.uid;
+            loadAccounts();
+            loadTransactions();
+        } else {
+            window.location.href = "/";
+        }
+    });
+
+    // ✅ Load accounts
+    async function loadAccounts() {
+        const grid = document.getElementById("accountsGrid");
+        grid.innerHTML = "";
+
+        const accountsRef = ref(db, "accounts/" + currentUserId);
+        const snapshot = await get(accountsRef);
+
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+
+            // Main Account
+            if (data.main) {
+                const main = data.main;
+                const card = document.createElement("div");
+                card.classList.add("feature-card");
+                card.innerHTML = `
+                    <h3>${main.type}</h3>
+                    <p style="font-size:1.4rem; font-weight:bold;">R${(main.balance || 0).toFixed(2)}</p>
+                    <p>**** ${main.accountNumber}</p>
+                    <button class="btn btn-secondary" onclick="openTransfer('main')">Transfer</button>
+                `;
+                grid.appendChild(card);
+            }
+
+            // Other accounts
+            Object.keys(data).forEach((key) => {
+                if (key !== "main" && typeof data[key] === "object" && data[key].type) {
+                    const acc = data[key];
+                    const card = document.createElement("div");
+                    card.classList.add("feature-card");
+                    card.innerHTML = `
+                        <h3>${acc.type}</h3>
+                        <p style="font-size:1.4rem; font-weight:bold;">R${(acc.balance || 0).toFixed(2)}</p>
+                        <p>**** ${acc.accountNumber || key.slice(-4)}</p>
+                        <button class="btn btn-secondary" onclick="openTransfer('${key}')">Transfer</button>
+                    `;
+                    grid.appendChild(card);
+                }
+            });
+        }
+
+        // Create new account card
+        const createCard = document.createElement("div");
+        createCard.classList.add("feature-card");
+        createCard.style.cssText = "border-top:4px solid var(--primary-light); background:var(--light); text-align:center;";
+        createCard.innerHTML = `
+            <h3>Create New Account</h3>
+            <p>Open another savings, business, or credit account.</p>
+            <button class="btn btn-primary" onclick="openModal('createModal')">+ Create Internal Account</button>
+        `;
+        grid.appendChild(createCard);
+    }
+
+    // ✅ Populate only "To Account"
+    async function populateToAccountDropdown() {
+        const toSel = document.getElementById("toAccount");
+        toSel.innerHTML = "";
+
+        const accountsRef = ref(db, "accounts/" + currentUserId);
+        const snapshot = await get(accountsRef);
+
+        if (snapshot.exists()) {
+            const accounts = snapshot.val();
+            Object.keys(accounts).forEach((key) => {
+                const acc = accounts[key];
+                if (!acc || acc.balance === undefined) return;
+                const option = `<option value="${key}">${acc.type} (**** ${acc.accountNumber || key.slice(-4)}) - R${(acc.balance || 0).toFixed(2)}</option>`;
+                toSel.innerHTML += option;
+            });
+        }
+    }
+
+    // ✅ Open modal with fixed "From Account"
+    window.openTransfer = async (fromKey) => {
+        openModal('transferModal');
+        await populateToAccountDropdown();
+
+        const fromRef = ref(db, `accounts/${currentUserId}/${fromKey}`);
+        const snap = await get(fromRef);
+        if (snap.exists()) {
+            const acc = snap.val();
+            document.getElementById("fromAccount").value = fromKey;
+            document.getElementById("fromAccountDisplay").innerText =
+                `${acc.type} (**** ${acc.accountNumber || fromKey.slice(-4)}) - R${(acc.balance || 0).toFixed(2)}`;
+        }
+    };
+
+    // ✅ Handle transfers
+    document.getElementById("transferForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const from = document.getElementById("fromAccount").value;
+        const to = document.getElementById("toAccount").value;
+        const amount = parseFloat(document.getElementById("transferAmount").value);
+
+        if (!from || !to || from === to) return alert("Please select a different destination account.");
+        if (isNaN(amount) || amount <= 0) return alert("Enter a valid amount.");
+
+        const fromRef = ref(db, `accounts/${currentUserId}/${from}`);
+        const toRef = ref(db, `accounts/${currentUserId}/${to}`);
+        const fromSnap = await get(fromRef);
+        const toSnap = await get(toRef);
+
+        if (!fromSnap.exists() || !toSnap.exists()) return alert("Account not found.");
+        const fromAcc = fromSnap.val();
+        const toAcc = toSnap.val();
+
+        if (fromAcc.balance < amount) return alert("Insufficient funds.");
+
+        await update(fromRef, { balance: fromAcc.balance - amount });
+        await update(toRef, { balance: toAcc.balance + amount });
+
+        const txRef = push(ref(db, `transactions/${currentUserId}`));
+        await set(txRef, {
+            from: fromAcc.type,
+            to: toAcc.type,
+            amount,
+            date: new Date().toLocaleString()
+        });
+
+        alert("Transfer successful!");
+        closeModal("transferModal");
+        loadAccounts();
+        loadTransactions();
+    });
+
+    // ✅ Create new account
+    document.getElementById("createAccountForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const type = document.getElementById("accountType").value;
+        const deposit = parseFloat(document.getElementById("initialDeposit").value) || 0;
+
+        const newAccRef = push(ref(db, "accounts/" + currentUserId));
+        await set(newAccRef, {
+            type,
+            balance: deposit,
+            accountNumber: Math.floor(100000 + Math.random() * 900000)
+        });
+
+        alert("New account created!");
+        closeModal("createModal");
+        loadAccounts();
+    });
+
+    // ✅ Load transactions
+    async function loadTransactions() {
+        const txList = document.getElementById("transactionsList");
+        txList.innerHTML = "";
+
+        const txRef = ref(db, "transactions/" + currentUserId);
+        const snapshot = await get(txRef);
+
+        if (snapshot.exists()) {
+            const transactions = Object.values(snapshot.val()).reverse();
+            if (transactions.length === 0) {
+                txList.innerHTML = "<p>No transactions yet.</p>";
+                return;
+            }
+
+            transactions.forEach(tx => {
+                if (!tx.from || !tx.to) return;
+                const div = document.createElement("div");
+                div.classList.add("testimonial-card");
+                div.innerHTML = `
+                    <div class="testimonial-text">
+                        <strong>Transfer from ${tx.from}</strong> to ${tx.to} — ${tx.date}
+                    </div>
+                    <div style="color:blue;">R${tx.amount.toFixed(2)}</div>
+                `;
+                txList.appendChild(div);
+            });
+        } else {
+            txList.innerHTML = "<p>No transactions yet.</p>";
+        }
+    }
+
+    // ✅ Modal control
+    window.openModal = (id) => document.getElementById(id).style.display = "block";
+    window.closeModal = (id) => document.getElementById(id).style.display = "none";
+    window.onclick = function (event) {
+        document.querySelectorAll(".modal").forEach(modal => {
+            if (event.target === modal) modal.style.display = "none";
+        });
+    };
+</script>
+
+</body>
+</html>
