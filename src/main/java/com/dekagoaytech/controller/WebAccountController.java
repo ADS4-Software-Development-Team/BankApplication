@@ -40,7 +40,22 @@ public class WebAccountController {
     public String showAddAccountPage() {
         return "manageAccounts"; // templates/manageAccounts.html
     }
-
+ @GetMapping("/transact")
+    public String showTransactPage() {
+        return "transact"; // templates/transact.html
+    }
+    @GetMapping("/business")
+    public String showBusinessPage() {
+        return "business"; // templates/Business.html
+    }
+    @GetMapping("/transact")
+    public String showInsurencePage() {
+        return "Insurence"; // templates/Insurence.html
+    }
+    @GetMapping("/credit")
+    public String showCreditPage() {
+        return "credit"; // templates/credit.html
+    }
     // Account creation form submission
     @PostMapping("/create-account")
     public String createAccount(
